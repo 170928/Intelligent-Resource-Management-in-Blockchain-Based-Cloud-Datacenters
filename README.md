@@ -62,6 +62,105 @@ DC와 상호 작용하여 생성 된 history data로부터 학습하는 RL 방�
 그림 1에서는 파선 경로를 사용하여 제출할 수있는 요청을 보여줍니다.  
 또한, 우리의 모델은 T로 표현되는 이산 시계열을 고려한다.  
 요청 r(k)의 데이터 처리 속도는 시간 tj에 걸쳐 변동하는 d로 표시됩니다.  
+![image](https://user-images.githubusercontent.com/40893452/44964375-14cada00-af6b-11e8-9d8c-b84eed4b7cbd.png)  
 많은 양의 데이터가 도착하면, 증가 된 계산 자원 사용은 더 많은 에너지를 소비하게됩니다.  
+![image](https://user-images.githubusercontent.com/40893452/44964414-55c2ee80-af6b-11e8-852d-938bba0813b6.png)  
+앞에서 언급 한 표기법에 기초하여, 시간 슬롯에서 DC ci의 에너지 소비  
+![image](https://user-images.githubusercontent.com/40893452/44964426-725f2680-af6b-11e8-8ee9-b0dff5f4d86d.png)  
+
+DC c(i) 에서 작동하는 VM에 의한 에너지 소비는 다음과 같다.  
+![image](https://user-images.githubusercontent.com/40893452/44964480-c10cc080-af6b-11e8-9ebd-8be61ff0835a.png)   
+이때, energy consumption은 DC c(i)의 hardware에 의존한다.  
+
+타임 슬롯 t(j-1), t(j) 에 DC c(i)가 수용 한 요청.  
+![image](https://user-images.githubusercontent.com/40893452/44964976-3c6f7180-af6e-11e8-86cc-b4d508044901.png)  
+
+DC c(i)에 의해서 생산되는 green energy generation at time t(j-1), t(j) 는 g로 표현된다.  
+![image](https://user-images.githubusercontent.com/40893452/44965003-5c9f3080-af6e-11e8-80df-6aa983a7d10a.png)  
+
+DC는 Google과 같은 우선 순위가 높은 녹색 에너지를 사용하고 불충분 한 부분은 기존 그리드에 의해 전원이 공급된다고 가정합니다.  
+
+녹색 에너지 및 전력망 가격은 다음과 같이 표기됩니다.  
+![image](https://user-images.githubusercontent.com/40893452/44965047-97a16400-af6e-11e8-9acc-9a52b798c8ea.png)  
+
+관리자는 요청과 해당 VM을 DC간에 마이그레이션하고 게이트웨이에서 라우팅 규칙을 업데이트하여 데이터 흐름을 리디렉션해야합니다.  
+이때, 마이그레이션에 의한 cost는 다음과 같습니다.   
+![image](https://user-images.githubusercontent.com/40893452/44965097-d3d4c480-af6e-11e8-901b-11762323d8e9.png)  
+이때, c(i) 에서 c'(i)로 마이그레이션하는 cost (at time t(j-1), t(j))는 다음과 같습니다.  
+![image](https://user-images.githubusercontent.com/40893452/44965111-e6e79480-af6e-11e8-9712-d0cbf29887ad.png)   
+
+마지막으로, 에너지 소비 및 요청 이전에 대한 전체 시간 슬롯에 걸친 총 비용은 다음과 같이 계산할 수 있습니다.  
+![image](https://user-images.githubusercontent.com/40893452/44965147-11d1e880-af6f-11e8-82ae-e18814d14283.png)  
+
+또한, 시간 t(j)에서 DC들 간의 요청들의 파노라마 뷰를 다음과 같이 정의한다.  
+![image](https://user-images.githubusercontent.com/40893452/44965171-2a420300-af6f-11e8-9d97-c5e0eccad9f6.png)  
+
+또한 제안 된 프레임 워크는 클라우드 DC 간의 사용자 요청을 관리하여 총 에너지 비용을 낮추는 것을 목표로합니다.  
+따라서 V를 계획하고 마이그레이션을 실행하여 총 비용 E를 최소화 할 것입니다.  
+이 두 작업은 미래의 (1) 들어오는 그린 에너지 gij 와 (2) 요청 이행 비용에 대한 지식없이 수행됩니다.  
+
+## Case Study: RL-Based Energy Cost Minimization 
+RL은 이익을 극대화하기 위해 여러 상황에서 무엇을해야하는지 배우는 접근법입니다. 
+RL의 핵심 요소는 상태, 조치, 보상 및 에이전트입니다.  
+에이전트의 학습 과정에는 일련의 행동과 그에 상응하는 보상이 포함됩니다.  
+각 상태에서 에이전트는 가치 함수 (즉, 가치 함수는 보상을위한 함수 매핑 상태 및 조치 임)에 따라 다양한 가능한 액션의 예상 수익을 평가합니다.  
+
+그런 다음 에이전트는 특정 정책에 따라 수행 할 작업을 선택하고 그 이후 상태가 변경됩니다.  
+
+이전 상태 및 취해진 조치와 관련된 보상은 가치 함수를 업데이트하는 데 사용됩니다.  
+
+일반적으로 수익이라고도하는 수익은 특정 주에서 취해진 조치의 이점을 측정하는 누적 된 보상입니다.  
+RL은 사전 지식이 필요 없기 때문에 복잡한 DC의 에너지 비용을 줄이기위한 이상적인 솔루션입니다.  
+
+우리의 제안에서, 아이디어는 이전 마이그레이션 의사 결정의 에너지 비용에 따라 DC간에 요청 및 VM을 마이그레이션하는 것입니다.
+
+우리는 들어오는 모든 요청에의해 촉발되는 현명한 계약으로 아이디어를 구현합니다.  
+즉, 요청 제출 또는 리소스 할당이 발생하면 스마트 계약에 의해 구현 된 비용 최소화 알고리즘이 트리거됩니다.  
+요청에 의해 유도 된 각 학습 반복에서 DC는 먼저 동작을 선택합니다 (요청과 해당 VM을 DC로 마이그레이션).  
+그런 다음 이주가 수행됩니다.  
+마지막으로 학습을 위해 새로운 주 및 보상 (DC의 부하 및 에너지 비용)을 얻습니다.  
+
+특히 작업에는 DC 간의 가능한 모든 요청 및 VM 마이그레이션이 포함되며 상태는 DC가 달성 할 수있는 부하 상황입니다.
+
+매 time slot의 시작에, next mining DC로 선정된 data center는 parnoramic view of request를 얻습니다.  
+이 정보를 기반으로, migration 이후의 VMr과 request의 위치를 결정합니다.  
+![image](https://user-images.githubusercontent.com/40893452/44966253-17323180-af75-11e8-91ca-4c5edb38590a.png)  
+![image](https://user-images.githubusercontent.com/40893452/44965475-d1736a00-af70-11e8-891f-37e1ac6022c2.png)  
+
+이때, DC들은 request의 panoramic view V(j)와 V(j+1)을 비교하면서 migration a(j)를 수행합니다.  
+이에대한 보상 r(j)는 equation 4 인 E 로 결정됩니다.  (cost)  
+
+migration 을 다음과 같이 Markov Decision Process로써 모델링 하였습니다.  
+![image](https://user-images.githubusercontent.com/40893452/44966350-a0e1ff00-af75-11e8-931f-3a6d9a17b198.png)  
+
+이 MDP 모델을 기반으로, value function Q(s, a)를 다음과 같이 정의합니다.  
+![image](https://user-images.githubusercontent.com/40893452/44966385-d1299d80-af75-11e8-9901-182850b11d0a.png)  
+
+알고리즘 2에서 RL 기반 마이그레이션 방법을 제시합니다. 
+π(φ)로 표현되는 정책을 사용합니다.
+임의의 행동을 확률 φ로 선택하거나 정책 π를 사용하여 행동을 선택합니다.
+> e-greedy 를 의미하며, epsilon 대신 φ로 표기한 것으로 보입니다.
+
+정책 (policy) π는 state s 에서 가장 낮은 값을 가진 action을 선택합니다.  
+이는 reward 로써 사용되는 Equation 4가 cost 이기 때문에 최소한의 cost를 가지는 action을 선택하는 것이 올바른 선택이기 때문입니다.  
+![image](https://user-images.githubusercontent.com/40893452/44966486-6c227780-af76-11e8-9182-5eef81522de2.png)   
+모든 DC는 requests와 VMs migration에 참여할 수 있기 때문에, smart constract는 Algorithm 2를 따라 작동합니다.  
+> 논문에 Algorithm2가 첨부되어있지 않네요 ... 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
